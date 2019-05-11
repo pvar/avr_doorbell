@@ -7,18 +7,21 @@ play:
 
 play_loop:
 
-;       COMPUTE 167 SAMPLES (166 * 496 CLOCK CYCLES)
+;       COMPUTE 167 SAMPLES
+;       = 166 * 496 CLOCK CYCLES
         ldi loop_cnt, 166
 sample_loop:
         rcall samples                                   ; 127 clock cycles
-        ldi tmp3, 119                                   ; 1 clock cycle
-        rcall delay                                     ; (3*120+4)+3=364 clock cycles
-        nop                                             ; 1 clock cycle
+        ldi tmp3, 160                                   ; 1 clock cycle
+        rcall delay                                     ; (3*160+4)+3=484 clock cycles
+        nop_x5                                          ; 5 clock cycles
         dec loop_cnt                                    ; 1 clock cycle
         brne sample_loop                                ; 2|1 clock cycles
         nop                                             ;   1 clock cycle
 
-;       COMPUTE 1 SAMPLE AND UPDATE CHANNELS 1, 2, and 3 (496 CLOCK CYCLES)
+;       COMPUTE A SAMPLE
+;       UPDATE CHANNELS 1, 2, and 3
+;       = 620 CLOCK CYCLES
         rcall samples                                   ; 127 clock cycles
         ldi channel_data, ch1_data                      ; 1 clock cycle
         rcall update                                    ; 98 clock cycles
@@ -27,19 +30,23 @@ sample_loop:
         ldi channel_data, ch3_data                      ; 1 clock cycle
         rcall update                                    ; 98 clock cycles
         nop                                             ; 1 clock cycle
-        ldi tmp3, 21                                    ; 1 clock cycle
-        rcall delay                                     ; (3*22+4)+3=70 clock cycles
+        nop                                             ; 1 clock cycle
+        ldi tmp3, 63                                    ; 1 clock cycle
+        rcall delay                                     ; (3*63+4)+3 = 193 clock cycles
 
-;       COMPUTE 1 SAMPLE, UPDATE CHANNEL AND CHECK IF IT HAS TO STOP (496 CLOCK CYCLES)
+;       COMPUTE A SAMPLE
+;       UPDATE CHANNEL 4
+;       CHECK IF IT HAS TO STOP
+;       = 620 CLOCK CYCLES
         rcall samples                                   ; 127 clock cycles
         ldi channel_data, ch4_data                      ; 1 clock cycle
         rcall update                                    ; 98 clock cycles
-
         sbi PINB, 0                                     ; 2 clock cycles (should get 96Ηz pulse on PB0)
-        ldi tmp3, 77                                    ; 1 clock cycle
-        rcall delay                                     ; (3*77+4)+3=238 clock cycles
+        ldi tmp3, 120                                   ; 1 clock cycle
+        rcall delay                                     ; (3*120+4)+3 = 364 clock cycles
 
-        ; check if all channels are done (20 clock cycles)
+        ; check if all channels are done
+        ; 20 CLOCK CYCLES
         clr tmp1                                        ; clear status -- will count stopped channels
         lds status, ch1_status                          ; get channel 1 status
         sbrs status, 0                                  ; check first bit (check if playing)
@@ -57,13 +64,15 @@ sample_loop:
         breq stop_playing                               ;
         nop                                             ;
 
-        ; check if CPU issued a stop command (7 clock cycles)
+        ; check if CPU issued a stop command
+        ; 7 CLOCK CYCLES
         in tmp1, PINB                                   ; check for CPU signal
         sbrs tmp1, newbyte                              ;
         rjmp cpu_stop_end                               ;
         in tmp1, PIND                                   ; check if received a "stop" command
         cpi tmp1, cmd_stop                              ;
         brne play_loop                                  ; keep playing
+
         rjmp stop_playing                               ; or exit
 cpu_stop_end:
         nop                                             ;

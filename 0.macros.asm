@@ -10,6 +10,14 @@
         nop             ;
 .endmacro
 
+.macro nop_x5           ; 5 cycles
+        nop             ;
+        nop             ;
+        nop             ;
+        nop             ;
+        nop             ;
+.endmacro
+
 .macro nop_x7           ; 7 cycles
         nop             ;
         nop             ;
