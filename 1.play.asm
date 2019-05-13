@@ -2,9 +2,6 @@
 ;   play loop -- generate waveform
 ; -----------------------------------------------------------------------------
 
-play:
-        rcall init_music_data
-
 play_loop:
 
 ;       COMPUTE 167 SAMPLES
@@ -99,24 +96,7 @@ delay:
 ;   clear all data related to music
 ; -----------------------------------------------------------------------------
 
-init_music_data:
-        ldi tmp3, low(ch1_melody*2)             ; initialize note pointers
-        ldi tmp4, high(ch1_melody*2)            ;
-        sts ch1_note_ptr_l, tmp3                ;
-        sts ch1_note_ptr_h, tmp4                ;
-        ldi tmp3, low(ch2_melody*2)             ;
-        ldi tmp4, high(ch2_melody*2)            ;
-        sts ch2_note_ptr_l, tmp3                ;
-        sts ch2_note_ptr_h, tmp4                ;
-        ldi tmp3, low(ch3_melody*2)             ;
-        ldi tmp4, high(ch3_melody*2)            ;
-        sts ch3_note_ptr_l, tmp3                ;
-        sts ch3_note_ptr_h, tmp4                ;
-        ldi tmp3, low(ch4_melody*2)             ;
-        ldi tmp4, high(ch4_melody*2)            ;
-        sts ch4_note_ptr_l, tmp3                ;
-        sts ch4_note_ptr_h, tmp4                ;
-
+init_music:
         lds status, ch1_status                  ; mark all channels as playing
         sbr status, 1                           ; (do not alter enable/disable bit)
         sts ch1_status, status                  ;

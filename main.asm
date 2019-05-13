@@ -136,7 +136,8 @@ mcu_init:
         clr tmp1                                        ;
         ser tmp2                                        ;
         out DDRD, tmp1                                  ; PORTD: all inputs
-        out PORTD, tmp2                                 ; PORTD: pull-up
+        ldi tmp3, 0b11111101                            ;
+        out PORTD, tmp3                                 ; PORTD: pull-up on all pins except 2
         out DDRC, tmp2                                  ; PORTC: all outputs
         out PORTC, tmp1                                 ; PORTC: logic zero
 
@@ -167,16 +168,109 @@ mcu_init:
 ;   main program loop
 ; -----------------------------------------------------------------------------
 
-        ser tmp1                                ; activate channels 1 through 3
+main_loop:
+        in tmp3, PIND
+        sbrc tmp3, 1
+        rjmp main_loop
+
+        rcall track2
+        rcall init_music
+        rcall play_loop
+
+        rjmp main_loop
+
+; -----------------------------------------------------------------------------
+track1:
+        ser tmp1                                ; activate channel 1
+        sts ch1_status, tmp1                    ;
+        clr tmp1                                ; deactivate channels 2,3,4
+        sts ch2_status, tmp1                    ;
+        sts ch3_status, tmp1                    ;
+        sts ch4_status, tmp1                    ;
+
+        ldi tmp3, low(ch1_melody1*2)            ;
+        ldi tmp4, high(ch1_melody1*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody1*2)            ;
+        ldi tmp4, high(ch2_melody1*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody1*2)            ;
+        ldi tmp4, high(ch3_melody1*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody1*2)            ;
+        ldi tmp4, high(ch4_melody1*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
+
+; -----------------------------------------------------------------------------
+track2:
+        ser tmp1                                ; activate channels 1,2
+        sts ch1_status, tmp1                    ;
+        sts ch2_status, tmp1                    ;
+        clr tmp1                                ; deactivate channels 3,4
+        sts ch3_status, tmp1                    ;
+        sts ch4_status, tmp1                    ;
+
+        ldi tmp3, low(ch1_melody2*2)            ;
+        ldi tmp4, high(ch1_melody2*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody2*2)            ;
+        ldi tmp4, high(ch2_melody2*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody2*2)            ;
+        ldi tmp4, high(ch3_melody2*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody2*2)            ;
+        ldi tmp4, high(ch4_melody2*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
+
+; -----------------------------------------------------------------------------
+track3:
+        ser tmp1                                ; activate channels 1,2,3
         sts ch1_status, tmp1                    ;
         sts ch2_status, tmp1                    ;
         sts ch3_status, tmp1                    ;
         clr tmp1                                ; deactivate channel 4
         sts ch4_status, tmp1                    ;
 
-main_loop:
-        rcall play
-        rjmp main_loop
+        ldi tmp3, low(ch1_melody3*2)            ;
+        ldi tmp4, high(ch1_melody3*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody3*2)            ;
+        ldi tmp4, high(ch2_melody3*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody3*2)            ;
+        ldi tmp4, high(ch3_melody3*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody3*2)            ;
+        ldi tmp4, high(ch4_melody3*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
 
 .include "1.play.asm"
 .include "2.update.asm"
