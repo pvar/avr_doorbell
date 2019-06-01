@@ -247,32 +247,30 @@ end_ch3:
         sbrc status, 1                          ; skip if disabled
         add sample_acc, sample                  ; add sample to total
 
-;       ----------------------------------
-;       CHANNEL 4: NOISE (28 CLOCK CYCLES)
-;       ----------------------------------
+;       -------------------------------------
+;       CHANNEL 4: TRIANGLE (28 CLOCK CYCLES)
+;       -------------------------------------
         lds tmp1, ch4_phase_accum_l             ; load phase_accum
         lds tmp2, ch4_phase_accum_h             ;
         lds tmp3, ch4_phase_delta_l             ; load phase_delta
         lds tmp4, ch4_phase_delta_h             ;
         add tmp1, tmp3                          ; add phase_delta to phase_accumulator
         adc tmp2, tmp4                          ;
-noise:
-        brcc skip_lfsr                          ; if accumulator overflows, compute new sample
-        ldi tmp3, 2                             ; prepare LFSR tap
-        lsl lfsr_l                              ; shift LFSR registers
-        rol lfsr_h                              ;
-        brvc skip_xor                           ;
-        eor lfsr_l, tmp3                        ; exclusive OR with tap
-skip_xor:
-        mov sample, lfsr_l                      ; get sample from LFSR low byte
-        andi sample, 0b00000111                 ; mask-out all but 3LSBs
-        rjmp exit_lfsr
-skip_lfsr:
-        nop_x4
-        nop_x4
-exit_lfsr:
+
+        brcc no_clr4                            ;
+        clr tmp1                                ; clear low byte on accumulator overflow (the other is already cleared ;-)
+no_clr4:
         sts ch4_phase_accum_l, tmp1             ; save phase_accum
         sts ch4_phase_accum_h, tmp2             ;
+
+        mov sample, tmp2                        ; get high byte of accumulator
+        swap sample                             ; swap nibbles
+        andi sample, 0b00000111                 ; keep 3LSBs of transposed high nibble
+        lsl sample                              ; shift left
+        ldi tmp3, 0b00001110                    ; prepare mask according to msb of high nibble of high byte of accumulator
+        sbrs tmp2, 7                            ;
+        ldi tmp3, 0b00000001                    ;
+        eor sample, tmp3                        ; exclusive OR with mask to "center" values around 7
 end_ch4:
         lds status, ch4_status                  ; check if channel is active or inactive (2nd bit in status)
         sbrc status, 1                          ; skip if disabled
