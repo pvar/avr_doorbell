@@ -95,6 +95,40 @@ delay:
 
 
 ; -----------------------------------------------------------------------------
+;   delay for 3 seconds
+; -----------------------------------------------------------------------------
+
+big_delay:
+        ser tmp1
+big_dloop:
+        ser tmp3
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        rcall delay
+        dec tmp1
+        brne big_dloop
+        ret
+
+delay_3sec:
+        ldi tmp4, 32
+d3s_loop:
+        rcall big_delay
+        dec tmp4
+        brne d3s_loop
+        ser tmp4
+        
+        ret
+
+
+
+; -----------------------------------------------------------------------------
 ;   clear all data related to music
 ; -----------------------------------------------------------------------------
 

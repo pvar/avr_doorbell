@@ -169,24 +169,64 @@ mcu_init:
 ; -----------------------------------------------------------------------------
 
 main_loop:
+
+loop1:
         in tmp3, PIND
         sbrc tmp3, 1
-        rjmp main_loop
+        rjmp loop1
+        rcall track1
+        rcall init_music
+        rcall play_loop
+        rcall delay_3sec
 
+loop2:
+        in tmp3, PIND
+        sbrc tmp3, 1
+        rjmp loop2
         rcall track2
         rcall init_music
         rcall play_loop
+        rcall delay_3sec
+
+loop3:
+        in tmp3, PIND
+        sbrc tmp3, 1
+        rjmp loop3
+        rcall track3
+        rcall init_music
+        rcall play_loop
+        rcall delay_3sec
+
+loop4:
+        in tmp3, PIND
+        sbrc tmp3, 1
+        rjmp loop4
+        rcall track4
+        rcall init_music
+        rcall play_loop
+        rcall delay_3sec
+
+loop5:
+        in tmp3, PIND
+        sbrc tmp3, 1
+        rjmp loop5
+        rcall track5
+        rcall init_music
+        rcall play_loop
+        rcall delay_3sec
 
         rjmp main_loop
 
+
+
 ; -----------------------------------------------------------------------------
 track1:
-        ser tmp1                                ; activate channel 1
-        sts ch1_status, tmp1                    ;
-        clr tmp1                                ; deactivate channels 2,3,4
+        ser tmp1                                ; activate channels 2,4
         sts ch2_status, tmp1                    ;
-        sts ch3_status, tmp1                    ;
         sts ch4_status, tmp1                    ;
+        clr tmp1                                ; deactivate channels 1,3
+        sts ch1_status, tmp1                    ;
+        sts ch3_status, tmp1                    ;
 
         ldi tmp3, low(ch1_melody1*2)            ;
         ldi tmp4, high(ch1_melody1*2)           ;
@@ -212,12 +252,12 @@ track1:
 
 ; -----------------------------------------------------------------------------
 track2:
-        ser tmp1                                ; activate channels 1,2
+        ser tmp1                                ; activate channels 1,3,4
         sts ch1_status, tmp1                    ;
-        sts ch2_status, tmp1                    ;
-        clr tmp1                                ; deactivate channels 3,4
         sts ch3_status, tmp1                    ;
         sts ch4_status, tmp1                    ;
+        clr tmp1                                ; deactivate channel 2
+        sts ch2_status, tmp1                    ;
 
         ldi tmp3, low(ch1_melody2*2)            ;
         ldi tmp4, high(ch1_melody2*2)           ;
@@ -243,11 +283,11 @@ track2:
 
 ; -----------------------------------------------------------------------------
 track3:
-        ser tmp1                                ; activate channels 1,2,3
+        ser tmp1                                ; activate channel 1
         sts ch1_status, tmp1                    ;
+        clr tmp1                                ; activate channels 2,3,4
         sts ch2_status, tmp1                    ;
         sts ch3_status, tmp1                    ;
-        clr tmp1                                ; deactivate channel 4
         sts ch4_status, tmp1                    ;
 
         ldi tmp3, low(ch1_melody3*2)            ;
@@ -267,6 +307,68 @@ track3:
 
         ldi tmp3, low(ch4_melody3*2)            ;
         ldi tmp4, high(ch4_melody3*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
+
+; -----------------------------------------------------------------------------
+track4:
+        ser tmp1                                ; activate channel 1
+        sts ch1_status, tmp1                    ;
+        clr tmp1                                ; activate channels 2,3,4
+        sts ch2_status, tmp1                    ;
+        sts ch3_status, tmp1                    ;
+        sts ch4_status, tmp1                    ;
+
+        ldi tmp3, low(ch1_melody4*2)            ;
+        ldi tmp4, high(ch1_melody4*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody4*2)            ;
+        ldi tmp4, high(ch2_melody4*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody4*2)            ;
+        ldi tmp4, high(ch3_melody4*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody4*2)            ;
+        ldi tmp4, high(ch4_melody4*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
+
+; -----------------------------------------------------------------------------
+track5:
+        ser tmp1                                ; activate channels 3,4
+        sts ch3_status, tmp1                    ;
+        sts ch4_status, tmp1                    ;
+        clr tmp1                                ; deactivate channels 1,2
+        sts ch1_status, tmp1                    ;
+        sts ch2_status, tmp1                    ;
+
+        ldi tmp3, low(ch1_melody5*2)            ;
+        ldi tmp4, high(ch1_melody5*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody5*2)            ;
+        ldi tmp4, high(ch2_melody5*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody5*2)            ;
+        ldi tmp4, high(ch3_melody5*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody5*2)            ;
+        ldi tmp4, high(ch4_melody5*2)           ;
         sts ch4_note_ptr_l, tmp3                ;
         sts ch4_note_ptr_h, tmp4                ;
 
