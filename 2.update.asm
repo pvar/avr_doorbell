@@ -5,7 +5,7 @@
 
 update:
 ;       ---------------------------------------------------
-;       GET SELECTED CHANNEL'S PARAMETERS (19 CLOCK CYCLES)
+;       GET SELECTED CHANNEL'S PARAMETERS (20 CLOCK CYCLES)
 ;       ---------------------------------------------------
         ldi XH, 1                               ; prepare pointer
         mov XL, channel_data                    ;
@@ -17,7 +17,7 @@ update:
         ld parameters, X+                       ;
         ld volume, X+                           ;
         ld status, X                            ;
-
+        ldi tmp3, 2                             ; temp value for decreasing volume
         clr tmp4                                ; equal to zero throughout this routine
 
 ;       ---------------------------------------------------------------
@@ -39,7 +39,7 @@ ch_fade_out:
         mov tmp1, volume                        ;
         cpi tmp1, 8                             ; (min level = 8)
         breq no_vol_dec                         ; if at min level, do not decrease volume
-        dec volume                              ; if not at min level, decrease volume by one
+        sub volume, tmp3                        ; if not at min level, decrease volume by tmp3
 no_vol_dec:
         nop
         rjmp apply_effects                      ; proceed to effect application

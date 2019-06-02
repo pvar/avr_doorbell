@@ -21,15 +21,15 @@ sample_loop:
 ;       = 620 CLOCK CYCLES
         rcall samples                                   ; 127 clock cycles
         ldi channel_data, ch1_data                      ; 1 clock cycle
-        rcall update                                    ; 98 clock cycles
+        rcall update                                    ; 99 clock cycles
         ldi channel_data, ch2_data                      ; 1 clock cycle
-        rcall update                                    ; 98 clock cycles
+        rcall update                                    ; 99 clock cycles
         ldi channel_data, ch3_data                      ; 1 clock cycle
-        rcall update                                    ; 98 clock cycles
+        rcall update                                    ; 99 clock cycles
         nop                                             ; 1 clock cycle
         nop                                             ; 1 clock cycle
-        ldi tmp3, 63                                    ; 1 clock cycle
-        rcall delay                                     ; (3*63+4)+3 = 193 clock cycles
+        ldi tmp3, 62                                    ; 1 clock cycle
+        rcall delay                                     ; (3*62+4)+3 = 190 clock cycles
 
 ;       COMPUTE A SAMPLE
 ;       UPDATE CHANNEL 4
@@ -37,10 +37,12 @@ sample_loop:
 ;       = 620 CLOCK CYCLES
         rcall samples                                   ; 127 clock cycles
         ldi channel_data, ch4_data                      ; 1 clock cycle
-        rcall update                                    ; 98 clock cycles
+        rcall update                                    ; 99 clock cycles
         sbi PINB, 0                                     ; 2 clock cycles (should get 96Ηz pulse on PB0)
-        ldi tmp3, 120                                   ; 1 clock cycle
-        rcall delay                                     ; (3*120+4)+3 = 364 clock cycles
+        ldi tmp3, 119                                   ; 1 clock cycle
+        rcall delay                                     ; (3*119+4)+3 = 364 clock cycles
+        nop                                             ; 1 clock cycle
+        nop                                             ; 1 clock cycle
 
         ; check if all channels are done
         ; 20 CLOCK CYCLES
