@@ -314,37 +314,6 @@ track3:
 
 ; -----------------------------------------------------------------------------
 track4:
-        ser tmp1                                ; activate channel 1
-        sts ch1_status, tmp1                    ;
-        clr tmp1                                ; activate channels 2,3,4
-        sts ch2_status, tmp1                    ;
-        sts ch3_status, tmp1                    ;
-        sts ch4_status, tmp1                    ;
-
-        ldi tmp3, low(ch1_melody4*2)            ;
-        ldi tmp4, high(ch1_melody4*2)           ;
-        sts ch1_note_ptr_l, tmp3                ;
-        sts ch1_note_ptr_h, tmp4                ;
-
-        ldi tmp3, low(ch2_melody4*2)            ;
-        ldi tmp4, high(ch2_melody4*2)           ;
-        sts ch2_note_ptr_l, tmp3                ;
-        sts ch2_note_ptr_h, tmp4                ;
-
-        ldi tmp3, low(ch3_melody4*2)            ;
-        ldi tmp4, high(ch3_melody4*2)           ;
-        sts ch3_note_ptr_l, tmp3                ;
-        sts ch3_note_ptr_h, tmp4                ;
-
-        ldi tmp3, low(ch4_melody4*2)            ;
-        ldi tmp4, high(ch4_melody4*2)           ;
-        sts ch4_note_ptr_l, tmp3                ;
-        sts ch4_note_ptr_h, tmp4                ;
-
-        ret
-
-; -----------------------------------------------------------------------------
-track5:
         ser tmp1                                ; activate channels 3,4
         sts ch3_status, tmp1                    ;
         sts ch4_status, tmp1                    ;
@@ -369,6 +338,37 @@ track5:
 
         ldi tmp3, low(ch4_melody5*2)            ;
         ldi tmp4, high(ch4_melody5*2)           ;
+        sts ch4_note_ptr_l, tmp3                ;
+        sts ch4_note_ptr_h, tmp4                ;
+
+        ret
+
+; -----------------------------------------------------------------------------
+track5:
+        ser tmp1                                ; activate channel 1
+        sts ch1_status, tmp1                    ;
+        clr tmp1                                ; activate channels 2,3,4
+        sts ch2_status, tmp1                    ;
+        sts ch3_status, tmp1                    ;
+        sts ch4_status, tmp1                    ;
+
+        ldi tmp3, low(ch1_melody4*2)            ;
+        ldi tmp4, high(ch1_melody4*2)           ;
+        sts ch1_note_ptr_l, tmp3                ;
+        sts ch1_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch2_melody4*2)            ;
+        ldi tmp4, high(ch2_melody4*2)           ;
+        sts ch2_note_ptr_l, tmp3                ;
+        sts ch2_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch3_melody4*2)            ;
+        ldi tmp4, high(ch3_melody4*2)           ;
+        sts ch3_note_ptr_l, tmp3                ;
+        sts ch3_note_ptr_h, tmp4                ;
+
+        ldi tmp3, low(ch4_melody4*2)            ;
+        ldi tmp4, high(ch4_melody4*2)           ;
         sts ch4_note_ptr_l, tmp3                ;
         sts ch4_note_ptr_h, tmp4                ;
 
