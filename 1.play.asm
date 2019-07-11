@@ -65,19 +65,11 @@ sample_loop:
 
         ; check if CPU issued a stop command
         ; 7 CLOCK CYCLES
-        in tmp1, PINB                                   ; check for CPU signal
-        sbrs tmp1, newbyte                              ;
-        rjmp cpu_stop_end                               ;
-        in tmp1, PIND                                   ; check if received a "stop" command
-        cpi tmp1, cmd_stop                              ;
-        brne play_loop                                  ; keep playing
-
-        rjmp stop_playing                               ; or exit
-cpu_stop_end:
-        nop                                             ;
-        rjmp play_loop                                  ; keep playing
+        nop_x5                                          ; (5)
+        rjmp play_loop                                  ; (2) keep playing
 
 stop_playing:
+        cbi PORTD, 3                                    ; disable amplifier
 ret
 
 
@@ -123,7 +115,7 @@ d3s_loop:
         dec tmp4
         brne d3s_loop
         ser tmp4
-        
+
         ret
 
 
@@ -133,6 +125,8 @@ d3s_loop:
 ; -----------------------------------------------------------------------------
 
 init_music:
+        sbi PORTD, 3                            ; enable amplifier
+
         lds status, ch1_status                  ; mark all channels as playing
         sbr status, 1                           ; (do not alter enable/disable bit)
         sts ch1_status, status                  ;

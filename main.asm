@@ -133,12 +133,13 @@ mcu_init:
         out SPL, tmp1                                   ;
 
         ; port pins
+        ldi tmp3, 0b00001000                            ;
+        out DDRD, tmp3                                  ; PORTD: PC3 output, the rest are inputs
+        ldi tmp3, 0b11110101                            ;
+        out PORTD, tmp3                                 ; PORTD: pull-up on all pins except 2 and 4
+        ser tmp1                                        ;
+        out DDRC, tmp1                                  ; PORTC: all outputs
         clr tmp1                                        ;
-        ser tmp2                                        ;
-        out DDRD, tmp1                                  ; PORTD: all inputs
-        ldi tmp3, 0b11111101                            ;
-        out PORTD, tmp3                                 ; PORTD: pull-up on all pins except 2
-        out DDRC, tmp2                                  ; PORTC: all outputs
         out PORTC, tmp1                                 ; PORTC: logic zero
 
         sbr tmp1, byteread                              ;
